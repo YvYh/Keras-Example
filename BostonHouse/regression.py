@@ -28,12 +28,12 @@ def build_model():
 	model.add(Dense(64, activation='relu'))
 	model.add(Dense(1))
 
-	model.compile(optimizer='rmsprop', loss='mean_squared_error', metrices=['mae'])
+	model.compile(optimizer='rmsprop', loss='mean_squared_error', metrics=['mae'])
 	return model
 	
 #k-test
 k = 4
-n_samples = len(x_train)
+n_samples = len(x_train) // k
 n_epochs = 100
 all_scores = []
 for i in range(k):
@@ -41,18 +41,14 @@ for i in range(k):
 	val_x = x_train[i*n_samples:(i + 1)*n_samples]
 	val_y = y_train[i*n_samples:(i + 1)*n_samples]
 	
-	partial_x_train = np.concatenate(
-	[x_train[:i*n_samples], 
-	x_train[(i+1)*n_samples:]],
-	axis=0)
-	partial_y_train = np.concatenate(
-	[y_train[:i*n_samples], 
-	y_train[(i+1)*n_samples:]],
-	axis=0)
+	partial_x_train = np.concatenate([x_train[:i*n_samples], x_train[(i+1)*n_samples:]],axis=0)
+	partial_y_train = np.concatenate([y_train[:i*n_samples], y_train[(i+1)*n_samples:]],axis=0)
 	
 	#Train the model, iterating on the data in batches of 32 samples
 	model = build_model()
 	model.fit(partial_x_train, partial_y_train, epochs=n_epochs, batch_size=1, verbose=0)
 	val_mse, val_mae = model.evaluate(val_x, val_y, verbose=0)
 	all_scores.append(val_mae)
+	
+print(all_scores)
 	

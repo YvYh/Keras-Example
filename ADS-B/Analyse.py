@@ -38,7 +38,12 @@ def itinerary(data):
     ax.set_ylabel('longitude')
     ax.set_zlabel('altitude')
     plt.savefig('itinerary.jpg')
-
 	
-data=transferData('log.txt')
-itinerary(data[:5500])
+def write_coor(data):
+	coor=data.loc[:,['lat','lon','geoaltitude']]
+	coor=coor.dropna(how='any')
+	coor.to_csv('coor.csv', index=False)
+	
+data=transferData('../../Thales/log.txt')
+#itinerary(data)
+write_coor('../../Thales/coor.csv', index=False)

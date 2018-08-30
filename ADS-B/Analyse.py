@@ -42,8 +42,8 @@ def itinerary(data):
 def write_coor(data):
 	coor=data.loc[:,['lat','lon','geoaltitude']]
 	coor=coor.dropna(how='any')
-	coor.to_csv('coor.csv', index=False)
+	coor.to_csv('../../Thales/coor.csv', index=False)
 	
 data=transferData('../../Thales/log.txt')
 #itinerary(data)
-write_coor('../../Thales/coor.csv', index=False)
+write_coor(data)
